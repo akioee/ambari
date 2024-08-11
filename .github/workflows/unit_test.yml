@@ -47,7 +47,14 @@ jobs:
       - name: Ambari Service Advisor
         run: mvn -T 3C -am install -pl ambari-serviceadvisor -DskipSurefireTests -DskipPythonTests -Dmaven.test.failure.ignore -DskipTests -Dfindbugs.skip -Drat.skip -Dmaven.artifact.threads=10
 
-      - name: Ambari WebUI Tests
-        run: mvn -X -T 2C -am test -pl ambari-web,ambari-admin -Dmaven.artifact.threads=10 -Drat.skip
       - name: RAT
         run: mvn org.apache.rat:apache-rat-plugin:check -Dmaven.artifact.threads=10
+
+      - name: Ambari WebUI Tests
+        run: mvn -X -T 2C -am test -pl ambari-web,ambari-admin -Dmaven.artifact.threads=10 -Drat.skip
+        
+      - name: Ambari Agent Tests
+        run: mvn -X -Dmaven.test.failure.ignore=true -am test -pl ambari-agent -Dmaven.artifact.threads=10 -Drat.skip
+
+      - name: Ambari Server PyTests
+        run: mvn -X -am test -pl ambari-server -DskipSurefireTests -Dmaven.test.failure.ignore -Dmaven.artifact.threads=10 -Drat.skip -Dcheckstyle.skip
