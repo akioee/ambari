@@ -1,0 +1,41 @@
+name: ambari-tester
+on: push
+jobs:
+  run_tests:
+    runs-on: ubuntu-latest
+    env:
+      TEMP: /tmp
+      TEMPDIR: /tmp
+      TMP: /tmp
+      TMPDIR: /tmp
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+        
+      - name: Setup python3.9
+        uses: actions/setup-python@v5.1.1
+        with:
+          python-version: '3.9'
+          
+      - name: Setup java & maven
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '8'
+          cache: 'maven'
+
+      - name: Install chrome
+        id: setup-chrome
+        uses: browser-actions/setup-chrome@v1
+
+      - name: Setup required dyn env
+        run: |
+          pip install distro
+          export CHROME_BIN=${{ steps.setup-chrome.outputs.chrome-path }}
+
+      - name: Check ambari-metrics
+        id: check_ambari_metrics
+        uses: andstor/file-existence-action@v3.0.0
+        with:
+          files: 'ambari-metrics'
+        
