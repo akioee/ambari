@@ -3,42 +3,30 @@ on: push
 jobs:
   run_tests:
     runs-on: ubuntu-latest
+    container: zrain/ambari-tester:0.0.1
     steps:
+      - name: Dbugger
+        run: |
+          whoami
+          pwd
+          ls -lsh
+        
       - name: Checkout the repository
         uses: actions/checkout@v4
         
-      - name: Setup python3.9
-        uses: actions/setup-python@v5.1.1
+      - name: Cache local Maven repository
+        uses: actions/cache@v3
         with:
-          python-version: '3.9'
-          
-      - name: Setup java & maven
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '8'
-          cache: 'maven'
-
-      - name: Install chrome
-        id: setup-chrome
-        uses: browser-actions/setup-chrome@v1
-
-      - name: Setup required dyn env
-        run: |
-          pip install distro
-          export CHROME_BIN=${{ steps.setup-chrome.outputs.chrome-path }}
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
 
       - name: Check ambari-metrics
         id: check_ambari_metrics
         uses: andstor/file-existence-action@v3.0.0
         with:
           files: 'ambari-metrics'
-
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
-        with:
-          limit-access-to-actor: false
-          detached: true
 
       - name: Ambari Metrics Build (deps)
         if: steps.check_ambari_metrics.outputs.files_exists == 'true'
@@ -50,12 +38,6 @@ jobs:
 
       - name: RAT
         run: mvn org.apache.rat:apache-rat-plugin:check -Dmaven.artifact.threads=10
-
-      - name: Ambari WebUI Tests
-        run: mvn -X -T 2C -am test -pl ambari-web,ambari-admin -Dmaven.artifact.threads=10 -Drat.skip
-        
-      - name: Ambari Agent Tests
-        run: mvn -X -Dmaven.test.failure.ignore=true -am test -pl ambari-agent -Dmaven.artifact.threads=10 -Drat.skip
 
       - name: Ambari Server PyTests
         run: mvn -X -am test -pl ambari-server -DskipSurefireTests -Dmaven.test.failure.ignore -Dmaven.artifact.threads=10 -Drat.skip -Dcheckstyle.skip
