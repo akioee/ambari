@@ -22,8 +22,6 @@ jobs:
       - name: Install chrome
         id: setup-chrome
         uses: browser-actions/setup-chrome@v1
-        with:
-          limit-access-to-actor: false
 
       - name: Setup required dyn env
         run: |
@@ -38,6 +36,8 @@ jobs:
 
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v3
+        with:
+          limit-access-to-actor: false
 
       - name: Ambari Metrics Build (deps)
         if: steps.check_ambari_metrics.outputs.files_exists == 'true'
