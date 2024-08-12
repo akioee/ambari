@@ -11,7 +11,6 @@ jobs:
         CLASSPATH: .:$JAVA_HOME/lib:$JAVA_HOME/jre/lib
         MAVEN_HOME: /usr/local/maven
         NODE_HOME: /usr/local/node
-        PATH: $JAVA_HOME/bin:$MAVEN_HOME/bin:$NODE_HOME/bin:$PATH
     steps:        
       - name: Checkout the repository
         uses: actions/checkout@v4
