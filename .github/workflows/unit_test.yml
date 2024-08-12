@@ -5,13 +5,6 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: zrain/ambari-tester:0.0.1
-      env:
-        CHROME_BIN: /usr/bin/chromium-browser
-        JAVA_HOME: /usr/local/jdk8
-        CLASSPATH: .:$JAVA_HOME/lib:$JAVA_HOME/jre/lib
-        MAVEN_HOME: /usr/local/maven
-        NODE_HOME: /usr/local/node
-        PATH: $JAVA_HOME/bin:$MAVEN_HOME/bin:$NODE_HOME/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
     steps:        
       - name: Checkout the repository
         uses: actions/checkout@v4
@@ -25,7 +18,6 @@ jobs:
             ${{ runner.os }}-maven-
             
       - name: Dbugger
-        shell: bash
         run: |
           echo $JAVA_HOME
           whoami
@@ -43,13 +35,10 @@ jobs:
       - name: Ambari Metrics Build (deps)
         if: steps.check_ambari_metrics.outputs.files_exists == 'true'
         working-directory: ambari-metrics
-        shell: bash
         run: mvn -T 3C install -DskipSurefireTests -DskipPythonTests -Dmaven.test.failure.ignore -DskipTests -Dfindbugs.skip -Drat.skip -Dmaven.artifact.threads=10 -X
       
       - name: Ambari Service Advisor
-        shell: bash
         run: mvn -T 3C -am install -pl ambari-serviceadvisor -DskipSurefireTests -DskipPythonTests -Dmaven.test.failure.ignore -DskipTests -Dfindbugs.skip -Drat.skip -Dmaven.artifact.threads=10
 
       - name: RAT
-        shell: bash
         run: mvn org.apache.rat:apache-rat-plugin:check -Dmaven.artifact.threads=10
