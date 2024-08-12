@@ -72,3 +72,14 @@ jobs:
           export NODE_HOME=/usr/local/node
           export PATH=$JAVA_HOME/bin:$MAVEN_HOME/bin:$NODE_HOME/bin:$PATH
           mvn org.apache.rat:apache-rat-plugin:check -Dmaven.artifact.threads=10
+
+      - name: Ambari WebUI Tests
+        shell: bash -e -o pipefail {0}
+        run: |
+          export CHROME_BIN=/usr/bin/chromium-browser
+          export JAVA_HOME=/usr/local/jdk8
+          export CLASSPATH=.:$JAVA_HOME/lib:$JAVA_HOME/jre/lib
+          export MAVEN_HOME=/usr/local/maven
+          export NODE_HOME=/usr/local/node
+          export PATH=$JAVA_HOME/bin:$MAVEN_HOME/bin:$NODE_HOME/bin:$PATH
+          mvn -X -T 2C -am test -pl ambari-web,ambari-admin -Dmaven.artifact.threads=10 -Drat.skip
