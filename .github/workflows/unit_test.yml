@@ -83,4 +83,5 @@ jobs:
           export MAVEN_HOME=/usr/local/maven
           export NODE_HOME=/usr/local/node
           export PATH=$CHROME_BIN:$JAVA_HOME/bin:$MAVEN_HOME/bin:$NODE_HOME/bin:$PATH
+          chmod -R 755 /usr/local/chrome-linux/
           mvn -X -T 2C -am test -pl ambari-web -Dmaven.artifact.threads=10 -Drat.skip
