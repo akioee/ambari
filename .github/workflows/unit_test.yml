@@ -23,8 +23,14 @@ jobs:
           pwd
           ls -lsh
           echo $SHELL
-          cat /root/.bashrc
-          source /root/.bashrc
+          export CHROME_BIN=/usr/bin/chromium-browser
+          export JAVA_HOME=/usr/local/jdk8
+          export PATH=$JAVA_HOME/bin:$PATH
+          export CLASSPATH=.:$JAVA_HOME/lib:$JAVA_HOME/jre/lib
+          export MAVEN_HOME=/usr/local/maven
+          export PATH=$MAVEN_HOME/bin:$PATH
+          export NODE_HOME=/usr/local/node
+          export PATH=$NODE_HOME/bin:$PATH
           mvn
 
       - name: Check ambari-metrics
