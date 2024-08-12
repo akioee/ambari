@@ -27,6 +27,7 @@ jobs:
       - name: Dbugger
         shell: bash
         run: |
+          echo $PATH
           whoami
           pwd
           echo $SHELL
