@@ -52,4 +52,4 @@ jobs:
         run: mvn -X -Dmaven.test.failure.ignore=true -am test -pl ambari-agent -Dmaven.artifact.threads=10 -Drat.skip
 
       - name: Ambari Server PyTests
-        run: sudo env "PATH=$PATH" bash -c "mvn -X -am test -pl ambari-server -DskipSurefireTests -Dmaven.test.failure.ignore -Dmaven.artifact.threads=10 -Drat.skip -Dcheckstyle.skip"
+        run: mvn -X -am test -pl ambari-server -DskipSurefireTests -Dmaven.test.failure.ignore -Dmaven.artifact.threads=10 -Drat.skip -Dcheckstyle.skip
