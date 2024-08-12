@@ -34,6 +34,9 @@ jobs:
         with:
           files: 'ambari-metrics'
 
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+
       - name: Ambari Metrics Build (deps)
         if: steps.check_ambari_metrics.outputs.files_exists == 'true'
         working-directory: ambari-metrics
