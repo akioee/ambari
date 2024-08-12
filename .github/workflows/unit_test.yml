@@ -5,8 +5,6 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: zrain/ambari-tester:0.0.1
-      env:
-        BASH_ENV: /root/.bashrc
     steps:        
       - name: Checkout the repository
         uses: actions/checkout@v4
@@ -20,10 +18,16 @@ jobs:
             ${{ runner.os }}-maven-
             
       - name: Dbugger
-        shell: bash {0}
+        shell: bash -e -o pipefail {0}
         run: |
-          source /root/.bashrc
-          echo $JAVA_HOME
+          export CHROME_BIN=/usr/bin/chromium-browser
+          export JAVA_HOME=/usr/local/jdk8
+          export PATH=$JAVA_HOME/bin:$PATH
+          export CLASSPATH=.:$JAVA_HOME/lib:$JAVA_HOME/jre/lib
+          export MAVEN_HOME=/usr/local/maven
+          export PATH=$MAVEN_HOME/bin:$PATH
+          export NODE_HOME=/usr/local/node
+          export PATH=$NODE_HOME/bin:$PATH
           whoami
           pwd
           echo $SHELL
@@ -39,13 +43,13 @@ jobs:
       - name: Ambari Metrics Build (deps)
         if: steps.check_ambari_metrics.outputs.files_exists == 'true'
         working-directory: ambari-metrics
-        shell: bash {0}
+        shell: bash -e -o pipefail {0}
         run: mvn -T 3C install -DskipSurefireTests -DskipPythonTests -Dmaven.test.failure.ignore -DskipTests -Dfindbugs.skip -Drat.skip -Dmaven.artifact.threads=10 -X
       
       - name: Ambari Service Advisor
-        shell: bash {0}
+        shell: bash -e -o pipefail {0}
         run: mvn -T 3C -am install -pl ambari-serviceadvisor -DskipSurefireTests -DskipPythonTests -Dmaven.test.failure.ignore -DskipTests -Dfindbugs.skip -Drat.skip -Dmaven.artifact.threads=10
 
       - name: RAT
-        shell: bash {0}
+        shell: bash -e -o pipefail {0}
         run: mvn org.apache.rat:apache-rat-plugin:check -Dmaven.artifact.threads=10
