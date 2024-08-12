@@ -22,6 +22,7 @@ jobs:
       - name: Dbugger
         shell: bash {0}
         run: |
+          source /root/.bashrc
           echo $JAVA_HOME
           whoami
           pwd
