@@ -12,7 +12,7 @@ jobs:
       - name: Cache local Maven repository
         uses: actions/cache@v3
         with:
-          path: ~/.m2/repository
+          path: /root/.m2/repository
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
@@ -29,7 +29,8 @@ jobs:
           whoami
           pwd
           echo $SHELL
-          mvn -X
+          java -version
+          mvn -version
 
       - name: Check ambari-metrics
         id: check_ambari_metrics
@@ -37,4 +38,37 @@ jobs:
         with:
           files: 'ambari-metrics'
 
+      - name: Ambari Metrics Build (deps)
+        if: steps.check_ambari_metrics.outputs.files_exists == 'true'
+        working-directory: ambari-metrics
+        shell: bash -e -o pipefail {0}
+        run: |
+          export CHROME_BIN=/usr/bin/chromium-browser
+          export JAVA_HOME=/usr/local/jdk8
+          export CLASSPATH=.:$JAVA_HOME/lib:$JAVA_HOME/jre/lib
+          export MAVEN_HOME=/usr/local/maven
+          export NODE_HOME=/usr/local/node
+          export PATH=$JAVA_HOME/bin:$MAVEN_HOME/bin:$NODE_HOME/bin:$PATH
+          mvn -T 3C install -DskipSurefireTests -DskipPythonTests -Dmaven.test.failure.ignore -DskipTests -Dfindbugs.skip -Drat.skip -Dmaven.artifact.threads=10 -X
+      
+      - name: Ambari Service Advisor
+        shell: bash -e -o pipefail {0}
+        run: |
+          export CHROME_BIN=/usr/bin/chromium-browser
+          export JAVA_HOME=/usr/local/jdk8
+          export CLASSPATH=.:$JAVA_HOME/lib:$JAVA_HOME/jre/lib
+          export MAVEN_HOME=/usr/local/maven
+          export NODE_HOME=/usr/local/node
+          export PATH=$JAVA_HOME/bin:$MAVEN_HOME/bin:$NODE_HOME/bin:$PATH
+          mvn -T 3C -am install -pl ambari-serviceadvisor -DskipSurefireTests -DskipPythonTests -Dmaven.test.failure.ignore -DskipTests -Dfindbugs.skip -Drat.skip -Dmaven.artifact.threads=10
 
+      - name: RAT
+        shell: bash -e -o pipefail {0}
+        run: |
+          export CHROME_BIN=/usr/bin/chromium-browser
+          export JAVA_HOME=/usr/local/jdk8
+          export CLASSPATH=.:$JAVA_HOME/lib:$JAVA_HOME/jre/lib
+          export MAVEN_HOME=/usr/local/maven
+          export NODE_HOME=/usr/local/node
+          export PATH=$JAVA_HOME/bin:$MAVEN_HOME/bin:$NODE_HOME/bin:$PATH
+          mvn org.apache.rat:apache-rat-plugin:check -Dmaven.artifact.threads=10
