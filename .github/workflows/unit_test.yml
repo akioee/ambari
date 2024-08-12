@@ -5,6 +5,13 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: zrain/ambari-tester:0.0.1
+      env:
+        CHROME_BIN: /usr/bin/chromium-browser
+        JAVA_HOME: /usr/local/jdk8
+        CLASSPATH: .:$JAVA_HOME/lib:$JAVA_HOME/jre/lib
+        MAVEN_HOME: /usr/local/maven
+        NODE_HOME: /usr/local/node
+        PATH: $JAVA_HOME/bin:$MAVEN_HOME/bin:$NODE_HOME/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
     steps:        
       - name: Checkout the repository
         uses: actions/checkout@v4
