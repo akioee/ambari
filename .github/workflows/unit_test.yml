@@ -22,6 +22,8 @@ jobs:
       - name: Install chrome
         id: setup-chrome
         uses: browser-actions/setup-chrome@v1
+        with:
+          limit-access-to-actor: false
 
       - name: Setup required dyn env
         run: |
