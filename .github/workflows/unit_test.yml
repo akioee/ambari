@@ -23,7 +23,6 @@ jobs:
           pwd
           ls -lsh
           echo $SHELL
-          mvn
           cat /root/.bashrc
           source /root/.bashrc
           mvn
