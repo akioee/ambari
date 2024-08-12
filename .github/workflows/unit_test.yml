@@ -18,6 +18,7 @@ jobs:
             ${{ runner.os }}-maven-
             
       - name: Dbugger
+        shell: bash -e -o pipefail {0}
         run: |
           echo $JAVA_HOME
           whoami
@@ -35,10 +36,13 @@ jobs:
       - name: Ambari Metrics Build (deps)
         if: steps.check_ambari_metrics.outputs.files_exists == 'true'
         working-directory: ambari-metrics
+        shell: bash -e -o pipefail {0}
         run: mvn -T 3C install -DskipSurefireTests -DskipPythonTests -Dmaven.test.failure.ignore -DskipTests -Dfindbugs.skip -Drat.skip -Dmaven.artifact.threads=10 -X
       
       - name: Ambari Service Advisor
+        shell: bash -e -o pipefail {0}
         run: mvn -T 3C -am install -pl ambari-serviceadvisor -DskipSurefireTests -DskipPythonTests -Dmaven.test.failure.ignore -DskipTests -Dfindbugs.skip -Drat.skip -Dmaven.artifact.threads=10
 
       - name: RAT
+        shell: bash -e -o pipefail {0}
         run: mvn org.apache.rat:apache-rat-plugin:check -Dmaven.artifact.threads=10
