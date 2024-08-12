@@ -27,7 +27,7 @@ jobs:
       - name: Dbugger
         shell: bash
         run: |
-          echo $PATH
+          echo $JAVA_HOME
           whoami
           pwd
           echo $SHELL
