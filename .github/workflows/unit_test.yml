@@ -4,13 +4,7 @@ jobs:
   run_tests:
     runs-on: ubuntu-latest
     container: zrain/ambari-tester:0.0.1
-    steps:
-      - name: Dbugger
-        run: |
-          whoami
-          pwd
-          ls -lsh
-        
+    steps:        
       - name: Checkout the repository
         uses: actions/checkout@v4
         
@@ -21,6 +15,13 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
+            
+      - name: Dbugger
+        run: |
+          whoami
+          pwd
+          ls -lsh
+          echo $SHELL
 
       - name: Check ambari-metrics
         id: check_ambari_metrics
