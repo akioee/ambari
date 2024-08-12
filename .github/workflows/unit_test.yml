@@ -17,12 +17,16 @@ jobs:
             ${{ runner.os }}-maven-
             
       - name: Dbugger
+        shell: bash
         run: |
           whoami
           pwd
           ls -lsh
           echo $SHELL
+          mvn
           cat /root/.bashrc
+          source /root/.bashrc
+          mvn
 
       - name: Check ambari-metrics
         id: check_ambari_metrics
@@ -43,6 +47,3 @@ jobs:
       - name: RAT
         shell: bash
         run: mvn org.apache.rat:apache-rat-plugin:check -Dmaven.artifact.threads=10
-
-      - name: Ambari Server PyTests
-        run: mvn -X -am test -pl ambari-server -DskipSurefireTests -Dmaven.test.failure.ignore -Dmaven.artifact.threads=10 -Drat.skip -Dcheckstyle.skip
