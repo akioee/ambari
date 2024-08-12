@@ -29,9 +29,7 @@ jobs:
           whoami
           pwd
           echo $SHELL
-          java -version
-          mvn -version
-          mvn help:evaluate -Dexpression=settings.localRepository -q -DforceStdout
+          mvn -X
 
       - name: Check ambari-metrics
         id: check_ambari_metrics
