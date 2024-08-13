@@ -1,7 +1,5 @@
 name: ambari-tester
 on: push
-env:
-  ACTIONS_STEP_DEBUG: true
 jobs:
   run_tests:
     runs-on: ubuntu-latest
@@ -18,26 +16,16 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
-
-      - name: Install unzip
-        shell: bash -e -o pipefail {0}
-        run: apt-get install -y unzip
-            
-      - name: Setup Chrome
-        uses: browser-actions/setup-chrome@v1
-        id: setup-chrome
-        with:
-          install-dependencies: true
             
       - name: Debugger
         shell: bash -e -o pipefail {0}
         run: |
-          export CHROME_BIN=/usr/local/chrome-linux
+          export CHROME_BIN=/usr/local/chrome-linux/chrome
           export JAVA_HOME=/usr/local/jdk8
           export CLASSPATH=.:$JAVA_HOME/lib:$JAVA_HOME/jre/lib
           export MAVEN_HOME=/usr/local/maven
           export NODE_HOME=/usr/local/node
-          export PATH=$CHROME_BIN:$JAVA_HOME/bin:$MAVEN_HOME/bin:$NODE_HOME/bin:$PATH
+          export PATH=/usr/local/chrome-linux:$CHROME_BIN:$JAVA_HOME/bin:$MAVEN_HOME/bin:$NODE_HOME/bin:$PATH
           whoami
           pwd
           echo $SHELL
@@ -86,10 +74,10 @@ jobs:
       - name: Ambari WebUI Tests
         shell: bash -e -o pipefail {0}
         run: |
+          export CHROME_BIN=/usr/local/chrome-linux/chrome
           export JAVA_HOME=/usr/local/jdk8
           export CLASSPATH=.:$JAVA_HOME/lib:$JAVA_HOME/jre/lib
           export MAVEN_HOME=/usr/local/maven
           export NODE_HOME=/usr/local/node
           export PATH=$JAVA_HOME/bin:$MAVEN_HOME/bin:$NODE_HOME/bin:$PATH
-          export CHROME_BIN=${{ steps.setup-chrome.outputs.chrome-path }}
           mvn -X -T 2C -am test -pl ambari-web -Dmaven.artifact.threads=10 -Drat.skip
