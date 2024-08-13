@@ -118,6 +118,7 @@ jobs:
           export CLASSPATH=.:$JAVA_HOME/lib:$JAVA_HOME/jre/lib
           export MAVEN_HOME=/usr/local/maven
           export NODE_HOME=/usr/local/node
+          export PYTHONPATH=/usr/local/lib/python3.9/site-packages:$PYTHONPATH
           export PATH=$JAVA_HOME/bin:$MAVEN_HOME/bin:$NODE_HOME/bin:$PATH
           mvn -X -Dmaven.test.failure.ignore=true -am test -pl ambari-agent -Dmaven.artifact.threads=10 -Drat.skip
 
@@ -128,6 +129,18 @@ jobs:
           export CLASSPATH=.:$JAVA_HOME/lib:$JAVA_HOME/jre/lib
           export MAVEN_HOME=/usr/local/maven
           export NODE_HOME=/usr/local/node
+          export PYTHONPATH=/usr/local/lib/python3.9/site-packages:$PYTHONPATH
           export PATH=$JAVA_HOME/bin:$MAVEN_HOME/bin:$NODE_HOME/bin:$PATH
           mvn -X -am test -pl ambari-server -DskipSurefireTests -Dmaven.test.failure.ignore -Dmaven.artifact.threads=10 -Drat.skip -Dcheckstyle.skip
+
+      - name: Ambari Server JTests
+        shell: bash -e -o pipefail {0}
+        run: |
+          export JAVA_HOME=/usr/local/jdk8
+          export CLASSPATH=.:$JAVA_HOME/lib:$JAVA_HOME/jre/lib
+          export MAVEN_HOME=/usr/local/maven
+          export NODE_HOME=/usr/local/node
+          export PYTHONPATH=/usr/local/lib/python3.9/site-packages:$PYTHONPATH
+          export PATH=$JAVA_HOME/bin:$MAVEN_HOME/bin:$NODE_HOME/bin:$PATH
+          mvn -am test -pl ambari-server -DskipPythonTests -Dmaven.test.failure.ignore -Dmaven.artifact.threads=10 -Drat.skip
       
