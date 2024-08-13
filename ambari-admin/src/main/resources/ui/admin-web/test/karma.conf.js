@@ -55,7 +55,7 @@ module.exports = function(config){
     customLaunchers: {
       ChromeHeadlessCustom: {
         base: 'ChromeHeadless',
-        flags: ['--no-sandbox', '--disable-gpu', '--disable-translate', '--disable-extensions']
+        flags: ['--no-sandbox', '--disable-gpu', '--disable-translate', '--disable-extensions', '--user-data-dir=/tmp']
       }
     },
 
