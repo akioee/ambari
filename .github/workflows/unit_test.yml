@@ -16,6 +16,18 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
+
+      - name: Cache local NPM repository
+        uses: actions/cache@v3
+        with:
+          path: |
+            ambari-admin/src/main/resources/ui/admin-web/node
+            ambari-web/node
+            ambari-admin/src/main/resources/ui/admin-web/node_modules
+            ambari-web/node_modules
+          key: ${{ runner.os }}-maven-${{ hashFiles('ambari-web/package.json', 'ambari-admin/src/main/resources/ui/admin-web/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
             
       - name: Debugger
         shell: bash -e -o pipefail {0}
