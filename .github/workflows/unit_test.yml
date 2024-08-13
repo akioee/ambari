@@ -25,7 +25,7 @@ jobs:
             ambari-web/node
             ambari-admin/src/main/resources/ui/admin-web/node_modules
             ambari-web/node_modules
-          key: ${{ runner.os }}-maven-${{ hashFiles('ambari-web/package.json', 'ambari-admin/src/main/resources/ui/admin-web/package.json') }}
+          key: ${{ runner.os }}-npm-${{ hashFiles('ambari-web/package.json', 'ambari-admin/src/main/resources/ui/admin-web/package.json') }}
           restore-keys: |
             ${{ runner.os }}-npm-
             
