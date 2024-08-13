@@ -8,12 +8,17 @@ jobs:
     steps:        
       - name: Checkout the repository
         uses: actions/checkout@v4
+
+      - name: Setup Cache key
+        run: |
+          echo "MAVEN_CACHE_KEY=${{ hashFiles('**/pom.xml') }}" >> $GITHUB_ENV
+          echo "NPM_CACHE_KEY=${{ hashFiles('ambari-web/package.json', 'ambari-admin/src/main/resources/ui/admin-web/package.json') }}" >> $GITHUB_ENV
         
       - name: Cache local Maven repository
         uses: actions/cache@v3
         with:
           path: /root/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          key: ${{ runner.os }}-maven-${{ env.MAVEN_CACHE_KEY }}
           restore-keys: |
             ${{ runner.os }}-maven-
 
@@ -25,7 +30,7 @@ jobs:
             ambari-web/node
             ambari-admin/src/main/resources/ui/admin-web/node_modules
             ambari-web/node_modules
-          key: ${{ runner.os }}-npm-${{ hashFiles('ambari-web/package.json', 'ambari-admin/src/main/resources/ui/admin-web/package.json') }}
+          key: ${{ runner.os }}-npm-${{ env.NPM_CACHE_KEY }}
           restore-keys: |
             ${{ runner.os }}-npm-
             
@@ -93,7 +98,6 @@ jobs:
           export NODE_HOME=/usr/local/node
           export PATH=$JAVA_HOME/bin:$MAVEN_HOME/bin:$NODE_HOME/bin:$PATH
           mvn -X -T 2C -am test -pl ambari-web -Dmaven.artifact.threads=10 -Drat.skip
-          rm -rf ambari-web/.org.chromium.Chromium.*
 
       - name: Ambari-admin Tests
         shell: bash -e -o pipefail {0}
@@ -106,5 +110,3 @@ jobs:
           export PATH=$JAVA_HOME/bin:$MAVEN_HOME/bin:$NODE_HOME/bin:$PATH
           apt-get install -y git
           mvn -X -T 2C -am test -pl ambari-admin -Dmaven.artifact.threads=10 -Drat.skip
-          rm -rf ambari-admin/src/main/resources/ui/admin-web/.org.chromium.Chromium.*
-          
