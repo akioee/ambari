@@ -81,6 +81,7 @@ jobs:
           export NODE_HOME=/usr/local/node
           export PATH=$JAVA_HOME/bin:$MAVEN_HOME/bin:$NODE_HOME/bin:$PATH
           mvn -X -T 2C -am test -pl ambari-web -Dmaven.artifact.threads=10 -Drat.skip
+          rm -rf ambari-web/.org.chromium.Chromium.*
 
       - name: Ambari-admin Tests
         shell: bash -e -o pipefail {0}
@@ -93,4 +94,5 @@ jobs:
           export PATH=$JAVA_HOME/bin:$MAVEN_HOME/bin:$NODE_HOME/bin:$PATH
           apt-get install -y git
           mvn -X -T 2C -am test -pl ambari-admin -Dmaven.artifact.threads=10 -Drat.skip
+          rm -rf ambari-admin/src/main/resources/ui/admin-web/.org.chromium.Chromium.*
           
