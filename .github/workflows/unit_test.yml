@@ -16,6 +16,10 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
+
+      - name: Install unzip
+        shell: bash -e -o pipefail {0}
+        run: apt-get install -y unzip
             
       - name: Setup Chrome
         uses: browser-actions/setup-chrome@v1
