@@ -74,6 +74,8 @@ jobs:
       - name: Ambari-admin Tests
         shell: bash -e -o pipefail {0}
         run: |
+          export TMPDIR=/tmp
+          export TEMPDIR=/tmp
           export CHROME_BIN=/usr/local/chrome-linux/chrome
           export JAVA_HOME=/usr/local/jdk8
           export CLASSPATH=.:$JAVA_HOME/lib:$JAVA_HOME/jre/lib
@@ -86,6 +88,8 @@ jobs:
       - name: Ambari-web Tests
         shell: bash -e -o pipefail {0}
         run: |
+          export TMPDIR=/tmp
+          export TEMPDIR=/tmp
           export CHROME_BIN=/usr/local/chrome-linux/chrome
           export JAVA_HOME=/usr/local/jdk8
           export CLASSPATH=.:$JAVA_HOME/lib:$JAVA_HOME/jre/lib
