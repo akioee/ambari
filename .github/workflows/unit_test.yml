@@ -97,16 +97,26 @@ jobs:
           export MAVEN_HOME=/usr/local/maven
           export NODE_HOME=/usr/local/node
           export PATH=$JAVA_HOME/bin:$MAVEN_HOME/bin:$NODE_HOME/bin:$PATH
-          mvn -X -T 2C -am test -pl ambari-web -Dmaven.artifact.threads=10 -Drat.skip
+          apt-get install -y git
+          mvn -X -T 2C -am test -pl ambari-web,ambari-admin -Dmaven.artifact.threads=10 -Drat.skip
 
-      - name: Ambari-admin Tests
+      - name: Ambari Agent Tests
         shell: bash -e -o pipefail {0}
         run: |
-          export CHROME_BIN=/usr/local/chrome-linux/chrome
           export JAVA_HOME=/usr/local/jdk8
           export CLASSPATH=.:$JAVA_HOME/lib:$JAVA_HOME/jre/lib
           export MAVEN_HOME=/usr/local/maven
           export NODE_HOME=/usr/local/node
           export PATH=$JAVA_HOME/bin:$MAVEN_HOME/bin:$NODE_HOME/bin:$PATH
-          apt-get install -y git
-          mvn -X -T 2C -am test -pl ambari-admin -Dmaven.artifact.threads=10 -Drat.skip
+          mvn -X -Dmaven.test.failure.ignore=true -am test -pl ambari-agent -Dmaven.artifact.threads=10 -Drat.skip
+
+      - name: Ambari Server PyTests
+        shell: bash -e -o pipefail {0}
+        run: |
+          export JAVA_HOME=/usr/local/jdk8
+          export CLASSPATH=.:$JAVA_HOME/lib:$JAVA_HOME/jre/lib
+          export MAVEN_HOME=/usr/local/maven
+          export NODE_HOME=/usr/local/node
+          export PATH=$JAVA_HOME/bin:$MAVEN_HOME/bin:$NODE_HOME/bin:$PATH
+          mvn -X -am test -pl ambari-server -DskipSurefireTests -Dmaven.test.failure.ignore -Dmaven.artifact.threads=10 -Drat.skip -Dcheckstyle.skip
+      
