@@ -92,4 +92,5 @@ jobs:
           export MAVEN_HOME=/usr/local/maven
           export NODE_HOME=/usr/local/node
           export PATH=$JAVA_HOME/bin:$MAVEN_HOME/bin:$NODE_HOME/bin:$PATH
+          apt-get install -y git
           mvn -X -T 2C -am test -pl ambari-admin -Dmaven.artifact.threads=10 -Drat.skip
